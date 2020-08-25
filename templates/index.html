@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+{#..........................................................#}
+{#    SEARCH BY NAME AND DATE#}
+{#..........................................................#}
+<div class="container">
+    <h3><span style="color: #686868; ">Specific User Data</span></h3>
+    {% if error %}
+        <p><span style="color: red; ">*{{ error }}</span></p>
+    {% endif %}
+
+    <form class ="form-inline" action = "" method = "POST">
+        <div class="form-group" style="margin-right: 3%;">
+             <p>ID: <input type = "text" name = "id" /></p>
+        </div>
+        <div class="form-group" style="margin-right: 3%;">
+             <p>From: <input type = "date" name = "from" /></p>
+        </div>
+        <div class="form-group" style="margin-right: 2%;">
+             <p>Till: <input type = "date" name = "till" /></p>
+        </div>
+        <div class="form-group">
+             <p><input type = "submit" value = "GET" style="margin-inside: 1%;"/></p>
+        </div>
+    </form>
+</div>
+<hr>
+
+{#..........................................................#}
+{#    TABLE
+{#..........................................................#}
+
+{# TABLE SEARCH#}
+<div class="container">
+  <h3><span style="color:#686868 ; ">Usage Tracker of All Users</span></h3>
+  <p><a href = "{{ url_for('download') }}" >Download complete database as .csv file</a></p>
+
+  <div class="container">
+    <form class ="form-inline" action = "" method="POST">
+        <div class="form-group" >
+             <input type = "text" name = "search_id" placeholder="Search ID.." />
+        </div>
+        <div class="form-group">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
+  </div>
+
+  <br>
+
+{# TABLE CONTENTS#}
+<table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>FIRST USED ON</th>
+        <th>LAST USED ON</th>
+        <th>COUNT</th>
+      </tr>
+    </thead>
+
+
+    {% for i in range(0,length) %}
+      <tr>
+         <td>{{ ids[i] }}</td>
+         <td>{{ date1[i] }}</td>
+         <td>{{ date2[i] }}</td>
+         <td>{{ counts[i] }}</td>
+      </tr>
+
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}
+
+
+

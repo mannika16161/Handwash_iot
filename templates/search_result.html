@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+
+{% block body %}
+
+{#..........................................................#}
+{#    HEADING INFORMATION#}
+{#..........................................................#}
+
+<div class="container">
+    <h5>USAGE BY ID: {{ id }} between {{ date1 }} AND {{ date2 }} </h5>
+    <p>Number of records found:{{ n }}</p>
+{#    <button class='btn btn-success pull-right' action="back" method="POST">Back</button>#}
+    <form action="back">
+        <input class=pull-right type = "submit" value = "HOME" action =back style="margin-inside: 1%;"/>
+    </form>
+
+    <p><a href = "{{ url_for('download') }}" >Download as .csv file</a></p>
+    <p>{{ msg }}</p>
+    <hr>
+
+{#..........................................................#}
+{#    GRAPH    #}
+{#..........................................................#}
+<!--    -->
+    <button class="collapsible">GRAPH</button>
+<div class="content" >
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<!--  -->
+</div>
+    <br>
+
+{#..........................................................#}
+{#    TABLE OF QUERIED NAME AND DATE#}
+{#..........................................................#}
+<!--    -->
+    <button class="collapsible">TABLE</button>
+<div class="content">
+     <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>TIME</th>
+          </tr>
+        </thead>
+
+    {% for row in rows %}
+      <tr>
+{#          <td><a href="{{ url_for('graph', id = row["id"] ) }}" >{{row["id"]}}</a></td>#}
+         <td>{{row["date"]}}</td>
+         <td>{{row["time"]}}</td>
+      </tr>
+
+    {% endfor %}
+  </table>
+</div>
+</div>
+
+{#..........................................................#}
+{#    SCRIPT FOR GRAPH#}
+{#..........................................................#}
+<script>
+    window.onload = function () {
+        let data = [];
+        let dataSeries = {type : "line"};
+        let values  = JSON.parse({{ values| tojson  }});
+        let labels = JSON.parse({{ labels| tojson  }});
+<!--        let labels = {{labels}};-->
+<!--        console.log(labels);-->
+<!--        let values = {{values}};-->
+        let dataPoints = [];
+
+        for (let i = 0; i < values.length; i += 1) {
+            dataPoints.push({
+                label: labels[i] ,
+                y: values[i]
+            });
+        }
+        console.log(dataPoints)
+        dataSeries.dataPoints = dataPoints;
+        data.push(dataSeries);
+
+        let options = {
+	        zoomEnabled: true,
+	        animationEnabled: true,
+	        title: {
+		        text: ""
+	        },
+	        axisY: {
+		        includeZero: false,
+		        lineThickness: 1
+	        },
+	        data: data  // random data
+};
+
+
+        //--------------- Chart 1 ---------------//
+        let chart1 = new CanvasJS.Chart("chartContainer", options);
+
+        chart1.render();
+        }
+</script>
+<!-collapsible--->
+
+{#..........................................................#}
+{#    SCRIPT FOR COLLAPSIBLE#}
+{#..........................................................#}
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+</script>
+<!---->
+<!---->
+
+{% endblock %}
+
+
+
